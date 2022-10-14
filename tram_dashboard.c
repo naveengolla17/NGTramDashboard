@@ -102,14 +102,14 @@ void Add(char msg, char *tram_id, char *value)
 		return;
 	}
 
-	tram_current = tram_head;
-   
+	tram_current = tram_head;	
+	
 	// Traverse till end of the list
 	while(tram_current->next!=NULL)
 		tram_current = tram_current->next;
    
 	// Add node at the end of the list
-	tram_current->next = tram; 
+	tram_current->next = tram; 	
 }
 /* Update node to the linked list*/
 void Update(char msg, char *tram_id, char *value) 
@@ -124,10 +124,12 @@ void Update(char msg, char *tram_id, char *value)
    } 
 
    tram_current = tram_head;
-   while(tram_current->next!=NULL) 
+   while(tram_current != NULL) 
    {
+	  //printf("tram_current->id : %s tram_id: %s\n",tram_current->id, tram_id);
       if(strcmp(tram_current->id, tram_id) == 0)
 	  {
+		//printf("tram id matched\n");
 		if(msg == 1) // update location
 		{
 			free(tram_current->location);
@@ -191,7 +193,7 @@ void dump_buffer(char* name) {
 		//printf("%c", c);
 		buf[i] = c;
     }	
-	//printf("%s\n", buf);
+	printf("%s\n", buf);
 	MsgType = strstr(buf,"PASSENGER_COUNT");
 	if(MsgType)	
 		msg = 2;
