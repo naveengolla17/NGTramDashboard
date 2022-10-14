@@ -70,6 +70,7 @@ typedef struct Dashboard {
 
 Tram *tram_head = NULL;
 Tram *tram_current = NULL;
+/* Add node to the linked list*/
 void Add(char msg, char *tram_id, char *value) 
 {   
 	size_t len = 0;
@@ -110,7 +111,7 @@ void Add(char msg, char *tram_id, char *value)
 	// Add node at the end of the list
 	tram_current->next = tram; 
 }
-
+/* Update node to the linked list*/
 void Update(char msg, char *tram_id, char *value) 
 {   
    int len = 0;
