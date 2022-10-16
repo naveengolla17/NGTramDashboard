@@ -74,7 +74,8 @@ Tram *tram_current = NULL;
 void Add(char msg, char *tram_id, char *value) 
 {   
 	size_t len = 0;
-	Tram *tram = (struct Tram*) malloc(sizeof(Tram));
+	Tram *tram = (struct Tram*) malloc(sizeof(Tram));	
+	Tram *next;
 
 	len = strlen(tram_id) + 1;
 	tram->id = (char *)malloc(len);
@@ -100,16 +101,38 @@ void Add(char msg, char *tram_id, char *value)
 	if(tram_head==NULL) {
 		tram_head = tram;
 		return;
+	}		
+	// Add the new tram details if tarm id comes before the first item
+	if(strcmp(tram_id,tram_head->id) < 0 ) 
+	{
+		tram->next = tram_head; 
+		tram_head = tram; 
+		return ; 
 	}
+    // Check and insert the new tram details in order
+    for ( tram_current = tram_head ; tram_current ->next != 0 ; tram_current = tram_current ->next )
+    {
+		next = tram_current->next;
+        if (strcmp(tram_id, next->id) < 0)
+        {
+            tram ->next = tram_current->next;
+            tram_current->next = tram ; 
+			return;
+        }
+    }
 
-	tram_current = tram_head;	
+    // There are no more items. Add to end
+    tram_current ->next = tram;
 	
+	/*
+	tram_current = tram_head;
 	// Traverse till end of the list
 	while(tram_current->next!=NULL)
 		tram_current = tram_current->next;
    
 	// Add node at the end of the list
-	tram_current->next = tram; 	
+	tram_current->next = tram; 
+	*/
 }
 /* Update node to the linked list*/
 void Update(char msg, char *tram_id, char *value) 
@@ -159,9 +182,9 @@ void DiaplayDashboard() {
    {
 	  if(tram->location && tram->passenger_count)
 	  {
-		printf("%s :\n",tram->id);
-		printf("\tLocation : %s\n", tram->location);
-		printf("\tPassenger Count : %s\n", tram->passenger_count);		
+		printf("%2s%s :\n", "", tram->id);
+		printf("%6sLocation : %s\n", "", tram->location);
+		printf("%6sPassenger Count : %s\n", "", tram->passenger_count);		
 	  }
 	  tram = tram->next;
    }
@@ -193,7 +216,7 @@ void dump_buffer(char* name) {
 		//printf("%c", c);
 		buf[i] = c;
     }	
-	printf("%s\n", buf);
+	//printf("%s\n", buf);
 	MsgType = strstr(buf,"PASSENGER_COUNT");
 	if(MsgType)	
 		msg = 2;
